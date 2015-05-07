@@ -49,7 +49,7 @@ json-stringify = JSON.stringify _, void, 2
 github.list-tags!
     .then take 5
     .then (tags) ->
-        Promise.all map get-and-parse, tags
+        Promise.map tags, get-and-parse, { concurrency: (parse-int process.env.CONCURRENCY) || 0 }
           .then zip-obj tags
           .then (obj) -> assoc 'latest', obj[tags.0], obj
     .then pipe to-pairs, for-each apply (tag, doc) ->
