@@ -1,7 +1,7 @@
 require! treis
 require! 'bluebird': Promise
 require! 'temp-write'
-require! 'ramda': {take, keys, nth, prop, is-empty, map, zip-obj, pipe-p, to-pairs, pipe, apply, for-each, assoc, concat, replace}
+require! 'ramda': {take, keys, nth, prop, is-empty, map, zip-obj, pipe-p, to-pairs, pipe, apply, for-each, assoc, concat, replace, default-to}
 require! './github'
 require! './parse-jsdoc'
 require! 'child_process': {spawn}
@@ -41,6 +41,9 @@ get-and-parse   = pipe-p get-ramda-js, parse-buffer
 tag-to-filename = (concat _, '.json') . replace /\./g, '_'
 tag-to-path     = (path.join OUT_DIR, _) . tag-to-filename
 
+get-concurrency = ->
+    parse-int default-to 0, process.env.CONCURRENCY
+
 write = (path, contents) ->
     fs.write-file-async path, contents, 'utf8'
 
@@ -49,7 +52,7 @@ json-stringify = JSON.stringify _, void, 2
 github.list-tags!
     .then take 5
     .then (tags) ->
-        Promise.map tags, get-and-parse, { concurrency: (parse-int process.env.CONCURRENCY) || 0 }
+        Promise.map tags, get-and-parse, { concurrency: get-concurrency! }
           .then zip-obj tags
           .then (obj) -> assoc 'latest', obj[tags.0], obj
     .then pipe to-pairs, for-each apply (tag, doc) ->
