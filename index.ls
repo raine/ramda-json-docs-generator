@@ -36,7 +36,7 @@ jsdoc-explain-buffer = (buf) ->
         .tap -> debug 'jsdoc-explain-buffer done'
 
 get-ramda-js    = github.get-contents _, 'dist/ramda.js'
-parse-buffer    = parse-jsdoc . jsdoc-explain-buffer
+parse-buffer    = pipe-p jsdoc-explain-buffer, parse-jsdoc
 get-and-parse   = pipe-p get-ramda-js, parse-buffer
 tag-to-filename = (concat _, '.json') . replace /\./g, '_'
 tag-to-path     = (path.join OUT_DIR, _) . tag-to-filename
