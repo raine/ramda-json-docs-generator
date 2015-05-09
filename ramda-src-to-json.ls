@@ -4,7 +4,7 @@ require! './lib/parse-jsdoc-output'
 require! './lib/jsdoc'
 require! ramda: {pipe-p}
 
-# :: String (file-path) -> ()
+# :: String (file-path) → ()
 ramda-src-to-json = pipe-p do
     jsdoc.explain
     parse-jsdoc-output

@@ -20,7 +20,7 @@ pick-tag = (field, obj) -->
 pick-tags   = map pick-tag, <[ category sig ]>
 pick-output = pick <[ name description sig category ]>
 
-# :: [JSDoc] -> [{name, sig, description, category}]
+# :: [JSDoc] → [{name, sig, description, category}]
 module.exports = pipe do
     filter is-docs-function
     map pick-output . (apply compose, pick-tags)
