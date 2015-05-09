@@ -27,6 +27,6 @@ npm install
 ```sh
 ./ramda-src-to-json.ls path/to/dist/ramda.js
 
-DEBUG=* GITHUB_TOKEN=deadbeef /
-  ramda-github.ls 
+DEBUG=* GITHUB_TOKEN=deadbeef \
+  ./fetch-github-tags.ls outdir
 ```
