@@ -19,6 +19,7 @@ die = (err) ->
     console.error 'something went wrong', err
     process.exit 1
 
+get-latest-tags = pipe-p github.list-tags, take 5
 get-ramda-js    = github.get-contents _, 'dist/ramda.js'
 parse-buffer    = pipe-p jsdoc.explain-buffer, parse-jsdoc-output
 get-and-parse   = pipe-p get-ramda-js, parse-buffer
@@ -31,12 +32,11 @@ dst-dir-path = get-arg 2
     .or-else -> console.error 'error: no dst dir path given'; process.exit 1
     .chain tap mkdirp.sync
 
-github.list-tags!
-    .then take 5
+get-latest-tags!
     .then (tags) ->
         Promise.map tags, get-and-parse, { concurrency: concurrency! }
-          .then zip-obj tags
-          .then (obj) -> assoc 'latest', obj[tags.0], obj
+            .then zip-obj tags
+            .then (obj) -> assoc 'latest', obj[tags.0], obj
     .then pipe to-pairs, for-each apply (tag, doc) ->
         dst = path.join dst-dir-path, (tag-to-filename tag)
         write-file dst, json-stringify doc
