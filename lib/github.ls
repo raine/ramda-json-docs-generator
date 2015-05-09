@@ -1,5 +1,4 @@
 require! 'bluebird': Promise
-# require! 'github-api': Github
 require! github: Github
 require! 'ramda': {pluck, nth, prop}
 debug = require 'debug' <| 'github'
