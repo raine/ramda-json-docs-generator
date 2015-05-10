@@ -3,7 +3,7 @@
 require! treis
 require! 'bluebird': Promise
 require! 'ramda': {take, zip-obj, pipe-p, to-pairs, pipe, apply, for-each, assoc, concat, replace, default-to, nth, chain, tap}
-require! 'data.maybe': Maybe
+require! 'data.maybe': {from-nullable: maybe}
 require! './lib/github'
 require! './lib/parse-jsdoc-output'
 require! './lib/jsdoc'
@@ -13,7 +13,7 @@ require! path
 write-file = Promise.promisify <| require 'fs' .write-file
 debug = require 'debug' <| 'index'
 
-get-arg = Maybe.from-nullable . (nth _, process.argv)
+get-arg = maybe . (nth _, process.argv)
 
 die = (err) ->
     console.error 'something went wrong', err

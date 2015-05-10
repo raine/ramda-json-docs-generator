@@ -1,4 +1,4 @@
-require! 'data.maybe': Maybe
+require! 'data.maybe': {from-nullable: maybe}
 require! 'ramda': {prop-eq, all-pass, filter, complement, pick, map, where, find, assoc, prop, compose, pipe, apply, either}
 
 is-function    = prop-eq 'kind', 'function'
@@ -14,7 +14,7 @@ is-documented  = all-pass [
 get-tag-or-empty = (title, obj) -->
     prop 'tags', obj
     |> find where {title}
-    |> Maybe.from-nullable
+    |> maybe
     |> map prop 'text'
     |> (.get-or-else '')
 
