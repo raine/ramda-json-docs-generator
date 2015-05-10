@@ -16,7 +16,7 @@ get-tag-or-empty = (title, obj) -->
     |> find where {title}
     |> Maybe.from-nullable
     |> map prop 'text'
-    |> (.get-or-else null)
+    |> (.get-or-else '')
 
 pick-tag = (field, obj) -->
     get-tag-or-empty field, obj
