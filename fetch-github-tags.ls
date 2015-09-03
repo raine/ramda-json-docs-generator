@@ -25,6 +25,8 @@ str-contains = curry-n 2, (invoker 1, 'indexOf') >> gte _, 0
 filter-lines = (pred, str) -->
     lines str |> filter pred |> unlines
 
+# typedef annotations in ramda jsdoc comments break jsdoc parsing for those
+# functions that have it
 remove-typedefs = pipe do
     (.to-string 'utf8')
     filter-lines (complement str-contains '* @typedef')
