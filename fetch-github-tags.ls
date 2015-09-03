@@ -2,7 +2,7 @@
 
 require! treis
 require! 'bluebird': Promise
-require! 'ramda': {take, zip-obj, pipe-p, to-pairs, pipe, apply, for-each, assoc, concat, replace, default-to, nth, chain, tap}
+require! 'ramda': {take, zip-obj, pipe-p, to-pairs, pipe, apply, for-each, assoc, concat, replace, default-to, nth, chain, tap, split, join, curry-n, invoker, gte, complement, filter}
 require! 'data.maybe': {from-nullable: maybe}
 require! './lib/github'
 require! './lib/parse-jsdoc-output'
@@ -19,10 +19,21 @@ die = (err) ->
     console.error 'something went wrong', err
     process.exit 1
 
+lines = split '\n'
+unlines = join '\n'
+str-contains = curry-n 2, (invoker 1, 'indexOf') >> gte _, 0
+filter-lines = (pred, str) -->
+    lines str |> filter pred |> unlines
+
+remove-typedefs = pipe do
+    (.to-string 'utf8')
+    filter-lines (complement str-contains '* @typedef')
+    -> new Buffer it
+
 get-latest-tags = pipe-p github.list-tags, take 5
 get-ramda-js    = github.get-contents _, 'dist/ramda.js'
 parse-buffer    = pipe-p jsdoc.explain-buffer, parse-jsdoc-output
-get-and-parse   = pipe-p get-ramda-js, parse-buffer
+get-and-parse   = pipe-p get-ramda-js, remove-typedefs, parse-buffer
 tag-to-filename = (concat _, '.json') . replace /\./g, '_'
 
 concurrency     = -> parse-int default-to 0, process.env.CONCURRENCY
