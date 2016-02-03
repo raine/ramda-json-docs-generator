@@ -32,3 +32,7 @@ npm install
 DEBUG=* GITHUB_TOKEN=deadbeef \
   ./fetch-github-tags.ls outdir
 ```
+
+## notes
+
+- Crashes for some reason with node v4, needs 0.12.x.
