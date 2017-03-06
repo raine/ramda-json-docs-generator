@@ -30,7 +30,7 @@ npm install
 
 ```sh
 DEBUG=* GITHUB_TOKEN=deadbeef \
-  ./fetch-github-tags.ls outdir
+  ./fetch-github-tags.ls 2 outdir
 ```
 
 ## notes
