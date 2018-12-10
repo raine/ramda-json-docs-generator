@@ -1,5 +1,5 @@
 require! 'bluebird': Promise
-require! github: Github
+require! '@octokit/rest': Github
 require! 'ramda': {pluck, nth, prop}
 debug = require 'debug' <| 'github'
 
@@ -18,13 +18,15 @@ github.authenticate do
 # :: () → Promise [tag]
 exports.list-tags = ->
     debug 'list-tags'
-    list-tags user: 'ramda' repo: 'ramda'
+    list-tags owner: 'ramda' repo: 'ramda'
+        .then (.data)
         .then pluck 'name'
         .tap -> debug 'list tags done'
 
 # :: ref → path → Promise Buffer
 exports.get-contents = (ref, path) ->
     debug {ref}, 'get-contents'
-    get-content {user: 'ramda', repo: 'ramda', path, ref}
+    get-content {owner: 'ramda', repo: 'ramda', path, ref}
+        .then (.data)
         .then (b64-decode . prop 'content')
         .tap -> debug 'get contents done'

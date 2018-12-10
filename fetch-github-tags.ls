@@ -32,7 +32,7 @@ remove-typedefs = pipe do
     filter-lines (complement str-contains '* @typedef')
     -> new Buffer it
 
-get-latest-tags = pipe-p github.list-tags, take process.argv.2
+get-latest-tags = pipe-p github.list-tags, take process.argv.3
 get-ramda-js    = github.get-contents _, 'dist/ramda.js'
 parse-buffer    = pipe-p jsdoc.explain-buffer, parse-jsdoc-output
 get-and-parse   = pipe-p get-ramda-js, remove-typedefs, parse-buffer
@@ -41,7 +41,7 @@ tag-to-filename = (concat _, '.json') . replace /\./g, '_'
 concurrency     = -> parse-int default-to 0, process.env.CONCURRENCY
 json-stringify  = JSON.stringify _, void, 2
 
-dst-dir-path = get-arg 3
+dst-dir-path = get-arg 4
     .or-else -> console.error 'error: no dst dir path given'; process.exit 1
     .chain tap mkdirp.sync
 
