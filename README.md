@@ -35,4 +35,4 @@ DEBUG=* GITHUB_TOKEN=deadbeef \
 
 ## notes
 
-- Crashes for some reason with node v4, needs 0.12.x.
+- ~~Crashes for some reason with node v4, needs 0.12.x.~~
